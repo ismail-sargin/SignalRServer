@@ -1,3 +1,4 @@
+using SignalRServer.App.Business;
 using SignalRServer.App.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -5,7 +6,11 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddCors(op => op.AddDefaultPolicy(pol =>
-    pol.AllowAnyMethod().AllowAnyHeader().AllowCredentials().SetIsOriginAllowed(_ => true)));
+    pol.AllowAnyMethod()
+    .AllowAnyHeader()
+    .AllowCredentials()
+    .SetIsOriginAllowed(_ => true)));
+builder.Services.AddTransient<MyBusiness>();
 builder.Services.AddSignalR();
 
 var app = builder.Build();
@@ -15,4 +20,5 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
 app.MapHub<MyHub>("/myHub");
+app.MapHub<MessageHub>("/messageHub");
 app.Run();
